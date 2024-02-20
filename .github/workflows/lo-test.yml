@@ -71,7 +71,7 @@ jobs:
       - name: Update feeds and packages
         run: |
           cd ~/lede
-          rm -rf tmp feeds pacakges/feeds
+          rm -rf tmp feeds packages/feeds
           ./scripts/feeds update -a
           ./scripts/feeds install -a
           . $GITHUB_WORKSPACE/scripts/merge_packages.sh
