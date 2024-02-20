@@ -261,7 +261,7 @@ jobs:
           tag: ${{env.strDate}}
           file_glob: true
           overwrite: true
-          release_name: ${{env.strDate}}
+          release_name: ${{env.strDate}}-slim
 
   generate_firmware:
     needs: build_packages
