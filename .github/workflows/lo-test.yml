@@ -218,6 +218,7 @@ jobs:
 
   generate_slim_firmware:
     needs: build_packages
+    if: always()
     name: Generate ${{ github.event.client_payload.device || github.event.inputs.device }} slim firmware
     runs-on: ubuntu-latest
     env:
@@ -260,7 +261,7 @@ jobs:
           tag: ${{env.strDate}}
           file_glob: true
           overwrite: true
-          release_name: ${{env.strDate}} Auto
+          release_name: ${{env.strDate}} Slim
 
   generate_firmware:
     needs: build_packages
