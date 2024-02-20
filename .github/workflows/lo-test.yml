@@ -6,7 +6,7 @@ on:
     inputs:
       device:
         description: 'select device to build'
-        default: 'r2s'
+        default: 'r5s'
         required: false
       branch:
         description: 'seleclt openwrt branch'
@@ -242,8 +242,8 @@ jobs:
           sed -i 's/$(OPKG) install $(BUILD_PACKAGES)/$(OPKG) install --force-overwrite $(BUILD_PACKAGES)/' Makefile
           ls packages/*.ipk | xargs -n1 basename > package.files
           PACKAGES=$(cat $GITHUB_WORKSPACE/$DEVICE.config.seed $GITHUB_WORKSPACE/common.seed | grep CONFIG_PACKAGE | grep '=y' | grep -v CONFIG_PACKAGE_luci-app | sed 's/CONFIG_PACKAGE_//;s/=y//' | xargs -ri grep -o {} package.files | sort -u | xargs echo)
-          PACKAGES="$PACKAGES `grep -o luci-i18n-opkg-zh-cn package.files || true`"
-          make image PACKAGES="$PACKAGES $LUCI $LP luci-i18n-base-zh-cn luci-i18n-firewall-zh-cn" FILES="files"
+          PACKAGES="$PACKAGES `grep -o luci-i18n-opkg-tr package.files || true`"
+          make image PACKAGES="$PACKAGES $LUCI $LP luci-i18n-base-tr luci-i18n-firewall-tr" FILES="files"
 
           mkdir -p $GITHUB_WORKSPACE/release
           mv $(ls -1 ./bin/targets/*/*/*img.gz | head -1) $GITHUB_WORKSPACE/release/$DEVICE-slim.img.gz
@@ -260,7 +260,7 @@ jobs:
           tag: ${{env.strDate}}
           file_glob: true
           overwrite: true
-          release_name: ${{env.strDate}} 自动发布
+          release_name: ${{env.strDate}}
 
   generate_firmware:
     needs: build_packages
@@ -290,10 +290,10 @@ jobs:
           sed -i 's/$(OPKG) install $(BUILD_PACKAGES)/$(OPKG) install --force-overwrite $(BUILD_PACKAGES)/' Makefile
           ls packages/*.ipk | xargs -n1 basename > package.files
           PACKAGES=$(cat $GITHUB_WORKSPACE/$DEVICE.config.seed $GITHUB_WORKSPACE/common.seed | grep CONFIG_PACKAGE | grep '=y' | grep -v CONFIG_PACKAGE_luci-app | sed 's/CONFIG_PACKAGE_//;s/=y//' | xargs -ri grep -o {} package.files | sort -u | xargs echo)
-          PACKAGES="$PACKAGES `grep -o luci-i18n-opkg-zh-cn package.files || true`"
+          PACKAGES="$PACKAGES `grep -o luci-i18n-opkg-tr package.files || true`"
           LUCI=$(cat $GITHUB_WORKSPACE/$DEVICE.config.seed $GITHUB_WORKSPACE/common.seed | grep CONFIG_PACKAGE_luci-app | grep '=y' | grep -v docker | sed 's/CONFIG_PACKAGE_//;s/=y//' | xargs -ri grep -o {} package.files | sort -u | xargs echo)
-          LP=$(echo $LUCI | sed 's/-app-/-i18n-/g;s/ /\n/g' | xargs -ri grep -o {}-zh-cn package.files | xargs echo)
-          make image PACKAGES="$PACKAGES $LUCI $LP luci-i18n-base-zh-cn luci-i18n-firewall-zh-cn" FILES="files"
+          LP=$(echo $LUCI | sed 's/-app-/-i18n-/g;s/ /\n/g' | xargs -ri grep -o {}-tr package.files | xargs echo)
+          make image PACKAGES="$PACKAGES $LUCI $LP luci-i18n-base-tr luci-i18n-firewall-tr" FILES="files"
 
           mkdir -p $GITHUB_WORKSPACE/release
           mv $(ls -1 ./bin/targets/*/*/*img.gz | head -1) $GITHUB_WORKSPACE/release/$DEVICE.img.gz
@@ -308,8 +308,8 @@ jobs:
           cd $GITHUB_WORKSPACE/ib
           rm -rf bin/
           LUCI=$(cat $GITHUB_WORKSPACE/$DEVICE.config.seed $GITHUB_WORKSPACE/common.seed | grep CONFIG_PACKAGE_luci-app | sed 's/CONFIG_PACKAGE_//;s/=y//' | xargs -ri grep -o {} package.files | sort -u | xargs echo)
-          LP=$(echo $LUCI | sed 's/-app-/-i18n-/g;s/ /\n/g' | xargs -ri grep -o {}-zh-cn package.files | xargs echo | xargs echo)
-          make image PACKAGES="$PACKAGES $LUCI $LP luci-i18n-base-zh-cn luci-i18n-firewall-zh-cn" FILES="files"
+          LP=$(echo $LUCI | sed 's/-app-/-i18n-/g;s/ /\n/g' | xargs -ri grep -o {}-tr package.files | xargs echo | xargs echo)
+          make image PACKAGES="$PACKAGES $LUCI $LP luci-i18n-base-tr luci-i18n-firewall-tr" FILES="files"
           mv $(ls -1 ./bin/targets/*/*/*img.gz | head -1) $GITHUB_WORKSPACE/release/$DEVICE-with-docker.img.gz
           cd $GITHUB_WORKSPACE/release/ && md5sum $DEVICE-with-docker.img.gz > $DEVICE-with-docker.img.gz.md5
           gzip -dc $DEVICE-with-docker.img.gz | md5sum | sed "s/-/$DEVICE-with-docker.img/" > $DEVICE-with-docker.img.md5
@@ -322,4 +322,4 @@ jobs:
           tag: ${{env.strDate}}
           file_glob: true
           overwrite: true
-          release_name: ${{env.strDate}} 自动发布
+          release_name: ${{env.strDate}}
